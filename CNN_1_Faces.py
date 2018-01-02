@@ -25,6 +25,8 @@ def main():
 										  save_format = "jpeg")
 	print(train.class_indices)
 	whatByWhatStridesBox = 3
+	numOfSteps = 2000
+	numOfEpochs = 20000
 	#TF_WEIGHTS_PATH = 'https://github.com/kentsommer/keras-inceptionV4/releases/download/2.0/inception-v4_weights_tf_dim_ordering_tf_kernels.h5'
 
 	model = Sequential()
@@ -60,17 +62,19 @@ def main():
 	#model.load_weights(weights_path, by_name=True)
 
 	model.fit_generator(generator = train,
-		steps_per_epoch=100, epochs=2, verbose=1)
+		steps_per_epoch=numOfSteps, epochs=numOfEpochs, verbose=1, use_multiprocessing = True)
 		#batch_size=20
 		#validation_data = train,
-		#use_multiprocessing = True
 
 	#model.fit(X_train, y_train, batch_size=20,
 		  #epochs=2, verbose=1, validation_split=0.3)
 
-	model.evaluate_generator(generator = train, use_multiprocessing = True)
+	score = model.evaluate_generator(steps = numOfSteps, generator = train, use_multiprocessing = True)
+	print(f'Test loss: {score[0]}')
+	print(f'Test accuracy: {score[1]}')
 
 	model.save_weights("my_model_weights.h5")
 	model.save("faces_MLmodel.h5")
 
+	print("\n\ngot to final piece of the puzzle models and weights have been saved-- DONE\n")
 main()
