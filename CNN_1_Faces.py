@@ -5,28 +5,30 @@ from keras.layers import Dense
 from keras.layers import Conv2D
 from keras.layers import MaxPool2D, AvgPool2D
 from keras.layers import Flatten, Activation, Dropout
-from keras.utils.data_utils import get_file
 import pathlib
+from keras import backend as K
 
 def main():
+	K.tensorflow_backend._get_available_gpus()
 	generator = ImageDataGenerator(rescale = 1./255,
-								   width_shift_range=0.1,
-								   height_shift_range=0.1,
-								   rotation_range = 180,
-								   shear_range = 0.3,
-								   zoom_range = 4.3,
-								   horizontal_flip = True)
+								width_shift_range=0.1,
+								height_shift_range=0.1,
+								rotation_range = 180,
+								shear_range = 0.3,
+								zoom_range = 4.3,
+								horizontal_flip = True)
 
-	train = generator.flow_from_directory('/Users/Niko/Desktop/50H_project_faceEmotion/learnfaces',
-										  target_size = (256, 256),
-										  batch_size = 10,
-										  class_mode = 'categorical',
-										  save_to_dir = pathlib.Path("/Users/Niko/Desktop/50H_project_faceEmotion/examples_of_pictures").mkdir(parents=True, exist_ok=True),
-										  save_format = "jpeg")
+	train = generator.flow_from_directory("C:\\Users\\Niko\\Desktop\\50H_project_faceEmotion\\learnfaceswithouthappy",
+										target_size = (256, 256),
+										batch_size = 10,
+										class_mode = 'categorical',
+										save_to_dir = pathlib.Path("examples_of_pictures").mkdir(parents=True, exist_ok=True),
+										save_format = "jpeg")
+
 	print(train.class_indices)
 	whatByWhatStridesBox = 3
-	numOfSteps = 2000
-	numOfEpochs = 20000
+	numOfSteps = 15
+	numOfEpochs = 5000
 	#TF_WEIGHTS_PATH = 'https://github.com/kentsommer/keras-inceptionV4/releases/download/2.0/inception-v4_weights_tf_dim_ordering_tf_kernels.h5'
 
 	model = Sequential()
@@ -77,4 +79,7 @@ def main():
 	model.save("faces_MLmodel.h5")
 
 	print("\n\ngot to final piece of the puzzle models and weights have been saved-- DONE\n")
-main()
+
+
+if __name__ == '__main__':
+	main()
